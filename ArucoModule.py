@@ -1,3 +1,4 @@
+#2715
 import cv2
 import cv2.aruco as aruco
 import numpy as np
@@ -22,15 +23,53 @@ def findArucoMarkers(img, markersSize=6, totalMarkers=250, draw=True):
     # getting boundingboxes, ids, rejected_markers
     bboxs, ids, rejected = aruco.detectMarkers(imgGray, arucoDict, parameters=arucoParam)
 
+    # Draw outlines on aruco markers and provides corner points
+    if draw:
+        # Aruco's own function to draw
+        aruco.drawDetectedMarkers(img, bboxs)
+    
+    return [bboxs, ids]
+
+# Aruco augment function for AR
+# imgAug => img that we'll augment 
+def augmentAruco(bbox, id, img, imgAug, drawID=True):
+    # getting corner points
+    topLeft = bbox[0][0][0], bbox[0][0][1]
+    topRight = bbox[0][1][0], bbox[0][1][1]
+    bottomRight = bbox[0][2][0], bbox[0][2][1]
+    bottomLeft = bbox[0][3][0], bbox[0][3][1]
+
+    # Size of img that will be augmented
+    height, width, channels = imgAug.shape
+
+    # Using Wrapperspective to get points for replacement or AR (**imp) 
+    pts1 = np.array([topLeft, topRight, bottomRight, bottomLeft])
+    pts2 = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
+
+    # ---Now to get matrix for wrapperspective---
+
+
 # main function
 def main():
     # enabling video capture device pass 0 for in-built laptops webcam
-
     cap = cv2.VideoCapture(0)
+
+    imgAug = cv2.imread("Markers")
 
     # creating synchronize image reading
     while True:
         success, img = cap.read()
+        
+        # Call here (we get bboxs and ids of markers)
+        arucoFound = findArucoMarkers(img)
+
+        # checking if it detected anything or not
+        # Looping through all the markers and augment each one
+        if len(arucoFound[0])!=0:
+            # Looping through together using zip
+            for bbox, id in zip(arucoFound[0], arucoFound[1]):
+                img = augmentAruco(bbox, id, img, imgAug)
+        
         cv2.imshow('Image', img)
         cv2.waitKey(1)
 
