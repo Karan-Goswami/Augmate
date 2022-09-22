@@ -3,7 +3,6 @@ import cv2.aruco as aruco
 import numpy as np
 import os
 
-from symbol import parameters
 
 # creating function to find arucomarkers from the camera
 
