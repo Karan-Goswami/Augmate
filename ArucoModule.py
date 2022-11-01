@@ -53,6 +53,10 @@ def augmentAruco(bbox, id, img, imgAug, drawID=True):
     cv2.fillConvexPoly(img, pts1.astype(int), (0, 0, 0))
     imgOut = img + imgOut
 
+    # conditional statements
+    if drawID:
+        cv2.putText(imgOut, str(id), (int(topLeft[0]), int(topLeft[1])), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 2)
+
     return imgOut
 
 
