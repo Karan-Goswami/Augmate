@@ -82,7 +82,13 @@ def main():
                 img = augmentAruco(bbox, id, img, imgAug)
         
         cv2.imshow('Image', img)
-        cv2.waitKey(1)
+        k = cv2.waitKey(1)
+
+        # Press esc key to close the camera window
+        if k == 27:
+            print('ESC')
+            cv2.destroyAllWindows()
+            break
 
 
 # Driver code
