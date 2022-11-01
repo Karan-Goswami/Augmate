@@ -47,6 +47,10 @@ def augmentAruco(bbox, id, img, imgAug, drawID=True):
     pts2 = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
 
     # ---Now to get matrix for wrapperspective---
+    matrix, _ = cv2.findHomography(pts2, pts1)
+    imgOut = cv2.warpPerspective(imgAug, matrix, (img.shape[1], img.shape[0]))
+
+    return imgOut
 
 
 # main function
@@ -54,7 +58,7 @@ def main():
     # enabling video capture device pass 0 for in-built laptops webcam
     cap = cv2.VideoCapture(0)
 
-    imgAug = cv2.imread("Markers")
+    imgAug = cv2.imread("markers/23.png")
 
     # creating synchronize image reading
     while True:
