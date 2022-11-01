@@ -65,7 +65,7 @@ def main():
     # enabling video capture device pass 0 for in-built laptops webcam
     cap = cv2.VideoCapture(0)
 
-    imgAug = cv2.imread("markers/23.png")
+    imgAug = cv2.imread("markers/24.png")
 
     # creating synchronize image reading
     while True:
