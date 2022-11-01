@@ -50,6 +50,9 @@ def augmentAruco(bbox, id, img, imgAug, drawID=True):
     matrix, _ = cv2.findHomography(pts2, pts1)
     imgOut = cv2.warpPerspective(imgAug, matrix, (img.shape[1], img.shape[0]))
 
+    cv2.fillConvexPoly(img, pts1.astype(int), (0, 0, 0))
+    imgOut = img + imgOut
+
     return imgOut
 
 
