@@ -4,8 +4,16 @@ import cv2.aruco as aruco
 import numpy as np
 import os
 
-
-# creating function to find arucomarkers from the camera
+# Function to load images that we want to augment
+def loadAugImages(path):
+    myList = os.listdir(path)
+    noOfMarkers = len(myList)
+    augDict = dict()
+    for imgPath in myList:
+        key = int(os.path.splitext(imgPath)[0])
+        imgAug = cv2.imread(f"{path}/{imgPath}")
+        augDict[key] = imgAug
+    return augDict
 
 # markersSize = 6 means 6*6
 def findArucoMarkers(img, markersSize=6, totalMarkers=250, draw=True):
@@ -65,7 +73,8 @@ def main():
     # enabling video capture device pass 0 for in-built laptops webcam
     cap = cv2.VideoCapture(0)
 
-    imgAug = cv2.imread("markers/24.png")
+    # imgAug = cv2.imread("markers/24.png")
+    augDict = loadAugImages("markers")
 
     # creating synchronize image reading
     while True:
@@ -79,7 +88,8 @@ def main():
         if len(arucoFound[0])!=0:
             # Looping through together using zip
             for bbox, id in zip(arucoFound[0], arucoFound[1]):
-                img = augmentAruco(bbox, id, img, imgAug)
+                if int(id) in augDict.keys():
+                    img = augmentAruco(bbox, id, img, augDict[int(id)])
         
         cv2.imshow('Image', img)
         k = cv2.waitKey(1)
